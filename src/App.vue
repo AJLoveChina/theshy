@@ -1,5 +1,16 @@
 <template>
     <div id="app" @click="click">
+        <div id="desc" v-if="!bStarted">
+            <div class="pp title">The Shy</div>
+            <div class="pp">😄大家将一个手指按到屏幕上任何位置, 系统随机挑选一个shy shy的Ta, 随机决定是谁喝酒、取外卖、洗碗等等</div>
+
+            <div class="nigeerhuo tab-icon">&#xe6f7;</div>
+        </div>
+
+        <div id="info">
+            <a href="https://github.com/AJLoveChina/theshy" target="_blank">open source link here</a><br>
+            <span class="nigeerhuo">&#xe8d2;</span>Idea by LW Mao、HYY && Developed by <a href="https://github.com/AJLoveChina" target="_blank">霸都丶傲天</a>
+        </div>
 
         <main>
             <div class="loaders">
@@ -25,6 +36,8 @@
             <Ball2 :ref="'ball-' + index" :x="ball.x" :y="ball.y" :main-color="ball.color" :zi='ball.zi'
                    :ball="ball"></Ball2>
         </template>
+
+        <button v-if="bEnd" id="reload" @click.stop="reload()">再来一次</button>
     </div>
 </template>
 
@@ -47,9 +60,11 @@
                 usedZiList: [],
                 colors: ['#4285f4', '#A7A7A7', '#fbbc05', '#769cdb', '#45ad61'],
                 usedColors: [],
+                bStarted: false,
                 bShowCountDown: false,
                 bCountDownOver: null,
-                countDownIndex: 5,
+                countDownIndexInit: 3,
+                countDownIndex: 3,
                 countDownInterval: null,
                 randomChooseIndex: 0,
                 defaultBounceColor: '#F46445',
@@ -61,36 +76,64 @@
                 minChangeMSLastMS: 3000,
                 changeMSX: 0,
                 sleepMS: 40,
+
+                bEnd: false,
+                intervalsWaitClear: [],
             }
         },
         created() {
         },
         mounted() {
-            this.$refs.countDownContainer.style.lineHeight = `${window.innerHeight}px`;
+            let style = document.createElement('style');
+            style.innerHTML = `#count-down-container{line-height:${window.innerHeight}px;}`
+            document.body.appendChild(style);
         },
         watch: {
             countDownIndex(newVal, oldVal) {
                 if (newVal <= 0) {
                     this.randomChoose();
                     this.modifyChangMS();
+                    this.finalSelect();
+                }
+            },
+            bEnd(newVal, oldVal) {
+                if (this.bEnd) {
+                    this.theshy();
                 }
             }
         },
         methods: {
-            easeInOutCubic(x) {
-                return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+            reload() {
+                window.location.reload()
+            },
+            theshy() {
+                let ball = this.ballsV2[this.randomChooseIndex];
+                this.ballsV2 = [ball];
+                this.bounceBall(ball, true);
+            },
+            finalSelect() {
+                let len = this.ballsV2.length;
+                setTimeout(() => {
+                    this.bEnd = true;
+                    this.clear();
+                }, (len * 1.2 + len * Math.random()) * 1000);
+            },
+            clear() {
+                this.intervalsWaitClear.forEach(i => clearInterval(i));
             },
             modifyChangMS() {
                 let x = 0;
-                setInterval(() => {
+                let interval = setInterval(() => {
+                    x+= 50;
                     if (x <= 3000) {
                         this.changeMS = - (this.initChangeMS - this.minChangeMS) / 3000 * x + this.initChangeMS;
                     } else if (x > 3000 && x < 6000) {
 
                     } else {
-                        this.changeMS += 30
+                        this.changeMS += 5 + Math.random() * 10;
                     }
                 }, 50);
+                this.intervalsWaitClear.push(interval);
             },
             addBall(x, y) {
                 this.balls.push({
@@ -158,20 +201,38 @@
                 }
                 if (this.bCountDownOver === true) return;
 
+                this.bStarted = true;
+                this.countDownIndex = this.countDownIndexInit;
+
                 let {clientX, clientY} = ev;
                 // this.addBall(clientX, clientY);
                 this.addBallV2(clientX, clientY);
                 this.countDown();
             },
+            bounceBall(ball, bBounce) {
+                if (bBounce) {
+                    ball.bounceColor = this.defaultBounceColor;
+                } else {
+                    ball.bounceColor = null;
+                }
+            },
             async randomChoose() {
                 while (true) {
+                    if (this.bEnd) {
+                        break;
+                    }
                     let ball = this.ballsV2[this.randomChooseIndex];
 
-                    ball.bounceColor = this.defaultBounceColor;
+                    this.bounceBall(ball, true);
+                    console.log(`sleep ${this.changeMS}`);
                     await sleep(this.changeMS);
 
+                    if (this.bEnd) {
+                        break;
+                    }
+
                     this.randomChooseIndex = (this.randomChooseIndex + 1) % this.ballsV2.length;
-                    ball.bounceColor = null;
+                    this.bounceBall(ball, false);
                 }
             },
             mousedown(ev) {
@@ -189,12 +250,43 @@
         box-sizing: border-box;
         padding: 0;
         margin: 0;
+        color:#333;
     }
 
     html, body {
         width: 100%;
         height: 100%;
         position: relative;
+    }
+
+    .tab-icon{
+        font-size: 100px;
+        color:#aaa;
+        margin-top:100px;
+    }
+    #info {
+        position: fixed;
+        left:0;bottom:0;
+        font-size: 12px;
+        color:#aaa;
+        padding:5px;
+    }
+    #info a{
+        color:#aaa;
+    }
+
+    #desc{
+        width:80%;
+        margin:20% auto;
+        text-align: center;
+    }
+    #desc .pp{
+        margin: 10px;
+        color:#999;
+    }
+    #desc .title {
+        font-size:30px;
+        font-weight: bold;
     }
 
     #app {
@@ -206,6 +298,21 @@
         box-sizing: border-box;
         display: -ms-flexbox;
         display: flex;
+    }
+
+    #reload{
+        width:150px;
+        padding: 10px;
+        background-color: #409eff;
+        color:white;
+        position: fixed;
+        left:50%;
+        bottom:20%;
+        transform: translateX(-50%);
+        text-align: center;
+        font-weight: 500;
+        border:1px solid #409eff;
+        border-radius: 4px;
     }
 
     #count-down-container {

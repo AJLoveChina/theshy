@@ -33,7 +33,7 @@
                 while (true) {
                     let ball = this.$refs.ball;
                     if (!ball) {
-                        return clearInterval(interval)
+                        break;
                     }
                     let {width} = ball.getBoundingClientRect();
                     if (width >= this.max) {

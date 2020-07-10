@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-import 'loaders.css'
+import './common.css'
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = true;
 
 new Vue({
   render: h => h(App),

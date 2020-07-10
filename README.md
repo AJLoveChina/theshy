@@ -1,6 +1,8 @@
-# theshy
+# The shy
 
-> 😄大家手指按到屏幕上随机挑选一个shy shy的Ta, 随机决定是谁喝酒、取外卖、洗碗等等 (开发中ing)
+> 😄大家手指按到屏幕上随机挑选一个shy shy的Ta, 随机决定是谁喝酒、取外卖、洗碗等等
+
+<img src='the-shy.gif' />
 
 ## Project setup
 ```

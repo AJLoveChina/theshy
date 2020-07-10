@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'nigeerhuo';  /* project id 37835 */
+    src: url('//at.alicdn.com/t/font_37835_aim28c4whnt.eot');
+    src: url('//at.alicdn.com/t/font_37835_aim28c4whnt.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_37835_aim28c4whnt.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_37835_aim28c4whnt.woff') format('woff'),
+    url('//at.alicdn.com/t/font_37835_aim28c4whnt.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_37835_aim28c4whnt.svg#nigeerhuo') format('svg');
+}
+
+.nigeerhuo {
+    font-family: 'nigeerhuo';
+}
