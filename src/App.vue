@@ -217,6 +217,7 @@
                 }
             },
             async randomChoose() {
+                this.randomChooseIndex = Math.floor(Math.random() * this.ballsV2.length);
                 while (true) {
                     if (this.bEnd) {
                         break;
