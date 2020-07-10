@@ -2,6 +2,8 @@
 
 > 😄大家手指按到屏幕上随机挑选一个shy shy的Ta, 随机决定是谁喝酒、取外卖、洗碗等等
 
+[Demo 点击这里试试](https://ajlovechina.github.io/theshy/)
+
 <img src='the-shy.gif' />
 
 ## Project setup
